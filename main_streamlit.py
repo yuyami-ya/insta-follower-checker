@@ -29,8 +29,21 @@ def compare_json(a_data, b_data):
         st.error(f"予期しないエラーが発生しました: {str(e)}")
         return None, None, None
 
+# CSSスタイルで横スクロールを有効にする
+st.markdown(
+    """
+    <style>
+    .scrollable {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # StreamlitアプリのUI部分
-st.title("インスタグラム フォローフォロワーチェッカー")
+st.title("JSONファイル比較アプリ")
 
 # ファイルアップロード
 followers_file = st.file_uploader("followers_1.jsonをアップロード", type="json")
@@ -45,16 +58,21 @@ if followers_file and following_file:
         # JSONを比較
         only_in_followers, only_in_following, in_both = compare_json(followers_data, following_data)
 
-        # 結果を表示
+        # 結果を3列レイアウトで表示
         if only_in_followers is not None and only_in_following is not None and in_both is not None:
-            st.subheader("followers_1.jsonだけにある値")
-            st.write(only_in_followers)
+            col1, col2, col3 = st.columns(3)  # 3列のレイアウトを作成
 
-            st.subheader("following.jsonだけにある値")
-            st.write(only_in_following)
+            with col1:
+                st.subheader("followers_1.jsonだけにある値")
+                st.markdown('<div class="scrollable">' + '<br>'.join(only_in_followers) + '</div>', unsafe_allow_html=True)
 
-            st.subheader("両方にある値")
-            st.write(in_both)
+            with col2:
+                st.subheader("following.jsonだけにある値")
+                st.markdown('<div class="scrollable">' + '<br>'.join(only_in_following) + '</div>', unsafe_allow_html=True)
+
+            with col3:
+                st.subheader("両方にある値")
+                st.markdown('<div class="scrollable">' + '<br>'.join(in_both) + '</div>', unsafe_allow_html=True)
 
             # 結果をファイルに出力
             if st.button("結果をテキストファイルに出力"):
