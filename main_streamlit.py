@@ -41,6 +41,7 @@ st.markdown(
         background-color: white;
         z-index: 100;
         padding: 10px 0;
+        text-align: center;
     }
     .scrollable {
         overflow-x: auto;
