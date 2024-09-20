@@ -9,7 +9,7 @@ def load_json(uploaded_file):
         st.error("JSONの読み込みに失敗しました。ファイルの形式を確認してください。")
         return None
     except Exception as e:
-        st.error(f"予期しないエラーが発生しました: {str(e)}")
+        st.error(f"予期しないエラーが発生しました 正しいファイルをアップロードしてください: {str(e)}")
         return None
 
 def compare_json(a_data, b_data):
@@ -24,10 +24,10 @@ def compare_json(a_data, b_data):
         return only_in_a, only_in_b, in_both
 
     except KeyError as e:
-        st.error(f"JSONフォーマットのエラー: {str(e)} キーが見つかりませんでした。")
+        st.error(f"JSONフォーマットのエラー 正しいファイルをアップロードしてください: {str(e)} キーが見つかりませんでした。")
         return None, None, None
     except Exception as e:
-        st.error(f"予期しないエラーが発生しました: {str(e)}")
+        st.error(f"予期しないエラーが発生しました. 正しいファイルをアップロードしてください: {str(e)}")
         return None, None, None
 
 # CSSでsubheaderをスクロール時に固定するスタイル
@@ -53,7 +53,7 @@ st.markdown(
 )
 
 # StreamlitアプリのUI部分
-st.title("JSONファイル比較アプリ")
+st.title("Instagram Follow Follower Checker")
 
 # ファイルアップロード
 followers_file = st.file_uploader("followers_1.jsonをアップロード", type="json")
