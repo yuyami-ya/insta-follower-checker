@@ -25,7 +25,7 @@ in_both_sorted = sorted(in_both)
 
 
 # 結果をファイルに出力
-with open(f'{output_prefix}/only_in_followers_1.txt', 'w') as followers_1_output:
+with open(f'{output_prefix}/only_in_followers.txt', 'w') as followers_1_output:
     for value in only_in_followers_1_sorted:
         followers_1_output.write(f"{value}\n")
 

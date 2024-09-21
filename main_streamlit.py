@@ -6,10 +6,10 @@ def load_json(uploaded_file):
     try:
         return json.load(uploaded_file)
     except json.JSONDecodeError:
-        st.error("JSONの読み込みに失敗しました。ファイルの形式を確認してください。")
+        st.error("Failed to load JSON. Please check the format of the file")
         return None
     except Exception as e:
-        st.error(f"予期しないエラーが発生しました 正しいファイルをアップロードしてください: {str(e)}")
+        st.error(f"Unexpected Error. upload correct file. : {str(e)}")
         return None
 
 def compare_json(a_data, b_data):
@@ -24,13 +24,13 @@ def compare_json(a_data, b_data):
         return only_in_a, only_in_b, in_both
 
     except KeyError as e:
-        st.error(f"JSONフォーマットのエラー 正しいファイルをアップロードしてください: {str(e)} キーが見つかりませんでした。")
+        st.error(f"JSON format error. upload correct file. : {str(e)} couldnt find Key.")
         return None, None, None
     except Exception as e:
-        st.error(f"予期しないエラーが発生しました. 正しいファイルをアップロードしてください: {str(e)}")
+        st.error(f"Unexpected Error. upload correct file. : {str(e)}")
         return None, None, None
 
-# CSSでsubheaderをスクロール時に固定するスタイル
+# CSS style to stick subheader when scrolling
 st.markdown(
     """
     <style>
@@ -52,70 +52,66 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# StreamlitアプリのUI部分
 st.title("Instagram Follow Follower Checker")
 
-# ファイルアップロード
-followers_file = st.file_uploader("followers_1.jsonをアップロード", type="json")
-following_file = st.file_uploader("following.jsonをアップロード", type="json")
+# Upload File
+followers_file = st.file_uploader("Upload followers_1.json", type="json")
+following_file = st.file_uploader("Upload following.json", type="json")
 
 if followers_file and following_file:
-    # JSONデータを読み込む
     followers_data = load_json(followers_file)
     following_data = load_json(following_file)
 
     if followers_data and following_data:
-        # JSONを比較
         only_in_followers, only_in_following, in_both = compare_json(followers_data, following_data)
 
-        # 結果を3列レイアウトで表示
+        # output 3 row
         if only_in_followers is not None and only_in_following is not None and in_both is not None:
-            col1, col2, col3 = st.columns(3)  # 3列のレイアウトを作成
+            col1, col2, col3 = st.columns(3)
 
             with col1:
-                st.markdown('<div class="sticky-header">followers_1.jsonだけにある値</div>', unsafe_allow_html=True)
+                st.markdown('<div class="sticky-header">only followers_1.json</div>', unsafe_allow_html=True)
                 st.markdown('<div class="scrollable">' + '<br>'.join(only_in_followers) + '</div>', unsafe_allow_html=True)
 
             with col2:
-                st.markdown('<div class="sticky-header">following.jsonだけにある値</div>', unsafe_allow_html=True)
+                st.markdown('<div class="sticky-header">only following.json</div>', unsafe_allow_html=True)
                 st.markdown('<div class="scrollable">' + '<br>'.join(only_in_following) + '</div>', unsafe_allow_html=True)
 
             with col3:
-                st.markdown('<div class="sticky-header">両方にある値</div>', unsafe_allow_html=True)
+                st.markdown('<div class="sticky-header">both</div>', unsafe_allow_html=True)
                 st.markdown('<div class="scrollable">' + '<br>'.join(in_both) + '</div>', unsafe_allow_html=True)
 
-            # 結果をテキストファイルとしてダウンロードできるようにする
-            # 1. followers_1.jsonにだけある値
+            # 1. only followers_1.json
             followers_buffer = io.StringIO()
             for value in only_in_followers:
                 followers_buffer.write(f"{value}\n")
             st.download_button(
-                label="followers_1.jsonだけにある値をダウンロード",
+                label="Download the values ​​only in followers_1.json",
                 data=followers_buffer.getvalue(),
                 file_name="only_in_followers.txt",
                 mime="text/plain"
             )
 
-            # 2. following.jsonにだけある値
+            # 2. only following.json
             following_buffer = io.StringIO()
             for value in only_in_following:
                 following_buffer.write(f"{value}\n")
             st.download_button(
-                label="following.jsonだけにある値をダウンロード",
+                label="Download the values ​​only in following.json",
                 data=following_buffer.getvalue(),
                 file_name="only_in_following.txt",
                 mime="text/plain"
             )
 
-            # 3. 両方にある値
+            # 3. in both
             both_buffer = io.StringIO()
             for value in in_both:
                 both_buffer.write(f"{value}\n")
             st.download_button(
-                label="両方にある値をダウンロード",
+                label="Download in Both",
                 data=both_buffer.getvalue(),
                 file_name="in_both.txt",
                 mime="text/plain"
             )
 else:
-    st.warning("2つのファイルをアップロードしてください。")
+    st.warning("Please upload two files.")
